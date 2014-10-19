@@ -1,57 +1,40 @@
-//We always have to include the library
 #include <Wire.h>
 #include "LedControlMS.h"
 // #include "MotionSensor.h"
 
-
-/*
- Now we need a LedControl to work with.
- ***** These pin numbers will probably not work with your hardware *****
- pin 12 is connected to the DataIn
- pin 11 is connected to the CLK
- pin 10 is connected to LOAD
- We have only a single MAX72XX.
- */
-#define NBR_MTX 2
-LedControl lc = LedControl(8,9,10, NBR_MTX);
-// MotionSensor ms = MotionSensor(0);
+// Number of matrix that are connected
+const int NBR_MTX = 2;
+// Clock
 const int DS1307 = 0x68; // Address of DS1307 see data sheets
 
-/* we always wait a bit between updates of the display */
-unsigned long delaytime=300;
+LedControl lc = LedControl(8,9,10, NBR_MTX);
+// MotionSensor ms = MotionSensor(0);
 
-//Numeros para matriz de led
+// Arrays with the LED setup for numbers and eyes
 bool number[10][8][8] = {0};
 bool eye[4][8][8] = {0};
-int current_h1 = -1,
-    current_h2 = -1,
-    current_m1 = -1,
-    current_m2 = -1;
-int showClock = 0;
+// Vars to check if time values has changed
+int current_h1, current_h2, current_m1, current_m2;
 
-
-bool showTime = false;
-long currentMilis = 0, previousMilis = -1;
-long timeInterval = 5000;
+// Enable or disable debug mode
+bool debug = true;
 
 void setup() {
-  /*
-  The MAX72XX is in power-saving mode on startup,
-  we have to do a wakeup call
-  */
-  Serial.begin (1200);
-  Serial.println("Setup");
+  Serial.begin (9600);
+  if (debug) Serial.println("Setup");
 
   Wire.begin();
-  delay(2000); // This delay allows the MCU to read the current date and time.
+  // This delay allows the MCU to read the current date and time.
+  delay(2000);
 
-  setDateTime();
+  // Enble this if you want to change the datetime in the clock chip
+  // setDateTime();
 
   for (int i=0; i< NBR_MTX; i++){
     lc.shutdown(i,false);
-    /* Set the brightness to a medium values */
-    lc.setIntensity(i,9);
-    /* and clear the display */
+    // Set the brightness
+    lc.setIntensity(i,1);
+    // and clear the display
     lc.clearDisplay(i);
   }
 
@@ -63,76 +46,23 @@ void setup() {
 
 
 void loop() {
-  currentMilis = millis();
 
-  if (false || showTime){
-    Serial.println("MOSTRANDO TIEMPO...");
-    Serial.print(currentMilis);
-    Serial.print("-");
-    Serial.print(previousMilis);
-    Serial.println();
-    if (previousMilis == -1){
-      previousMilis = currentMilis;
-    }
-    if (currentMilis - previousMilis >= timeInterval){
-      showTime = false;
-      previousMilis = -1;
-      Serial.println("INTERVALO CUMPLIDO");
-    }else{
-      time();
-      showTime = true;
-    }
-
+  if (true){
+    Serial.println("----- TIME ----");
+    showTime();
   }else{
-    Serial.println("----- OJOS ----");
-    current_h1 = -1;
-    current_h2 = -1;
-    current_m1 = -1;
-    current_m2 = -1;
+    Serial.println("----- EYES ----");
     showEyes();
   }
 
-
-
 }
 
-byte decToBcd(byte val) {
-  return ((val/10*16) + (val%10));
-}
-byte bcdToDec(byte val) {
-  return ((val/16*10) + (val%16));
-}
-
-void setDateTime(){
-
-  byte second =      00; //0-59
-  byte minute =      24; //0-59
-  byte hour =        13; //0-23
-  byte weekDay =     3; //1-7
-  byte monthDay =    11; //1-31
-  byte month =       6; //1-12
-  byte year  =       14; //0-99
-
-  Wire.beginTransmission(DS1307);
-  Wire.write(byte(0x00));
-
-  Wire.write(decToBcd(second));
-  Wire.write(decToBcd(minute));
-  Wire.write(decToBcd(hour));
-  Wire.write(decToBcd(weekDay));
-  Wire.write(decToBcd(monthDay));
-  Wire.write(decToBcd(month));
-  Wire.write(decToBcd(year));
-
-  Wire.write(byte(0x00));
-
-  Wire.endTransmission();
-
-}
-
-void time() {
-
+/**
+ * Show the current time in display
+ */
+void showTime() {
   int second, minute, hour, weekday, monthday, month, year;
+  int h1, h2, m1, m2;
 
   Wire.beginTransmission(DS1307);
   Wire.write(byte(0x00));
@@ -142,39 +72,12 @@ void time() {
   second     = bcdToDec(Wire.read() & 0x7f);
   minute     = bcdToDec(Wire.read());
   hour       = bcdToDec(Wire.read() & 0x3f);
-  // weekday = bcdToDec(Wire.read());
-  // monthday = bcdToDec(Wire.read());
-  // month = bcdToDec(Wire.read());
-  // year = bcdToDec(Wire.read());
 
-  // Serial.print(hour);
-  // Serial.print(":");
-  // Serial.print(minute);
-  // Serial.print(":");
-  // Serial.print(second);
-  // Serial.println();
+  h1 = hour / 10;
+  h2 = hour % 10;
 
-  writeClock( hour, minute);
-
-
-}
-
-void writeClock(int hours, int minutes){
-
-  int h1, h2, m1, m2;
-
-  h1 = hours / 10;
-  h2 = hours % 10;
-
-  m1 = minutes / 10;
-  m2 = minutes % 10;
-
-  // Serial.print(h1);
-  // Serial.print(h2);
-  // Serial.print(":");
-  // Serial.print(m1);
-  // Serial.print(m2);
-  // Serial.println("   ");
+  m1 = minute / 10;
+  m2 = minute % 10;
 
   if (current_h1 != h1){
     animateIn( h1, 0, 0 );
@@ -196,33 +99,11 @@ void writeClock(int hours, int minutes){
 
     current_m2 = m2;
   }
-
 }
 
-void animateIn( int num, int disp, int offset_x ){
-
-  // Entrada desde abajo
-  for(int i = -8; i <= 0; i++){
-    paintArray(number[num], disp, offset_x, i);
-    delay(10);
-  }
-}
-
-void paintArray(bool array[8][8], int disp, int offset_x, int offset_y){
-
-  for(int j = 0; j < 8; j++){
-    for(int k = 0; k < 8; k++){
-      if (array[j][k]){
-        lc.setLed(disp, offset_x + j,offset_y + k,true);
-      }else{
-        lc.setLed(disp, offset_x + j,offset_y + k,false);
-      }
-    }
-  }
-
-}
-
-
+/**
+ * Show eyes in display
+ */
 void showEyes(){
   int delayPestana = 50;
 
@@ -252,6 +133,13 @@ void showEyes(){
 
 
 }
+
+
+
+/**
+ * SETUP
+ */
+
 
 void setEyes(){
   //Centrado
@@ -517,4 +405,70 @@ void setNums(){
   number[9][2][6] = true;
   number[9][2][7] = true;
 
+}
+
+
+/**
+ * UTILS
+ */
+
+/**
+ * This function is to set the time in the ds1307 chip.
+ * No need to execute this every time.
+ */
+void setDateTime(){
+
+  byte second =      00; //0-59
+  byte minute =      31; //0-59
+  byte hour =        19; //0-23
+  byte weekDay =     1; //1-7
+  byte monthDay =    19; //1-31
+  byte month =       10; //1-12
+  byte year  =       14; //0-99
+
+  Wire.beginTransmission(DS1307);
+  Wire.write(byte(0x00));
+
+  Wire.write(decToBcd(second));
+  Wire.write(decToBcd(minute));
+  Wire.write(decToBcd(hour));
+  Wire.write(decToBcd(weekDay));
+  Wire.write(decToBcd(monthDay));
+  Wire.write(decToBcd(month));
+  Wire.write(decToBcd(year));
+
+  Wire.write(byte(0x00));
+
+  Wire.endTransmission();
+
+}
+
+void animateIn( int num, int disp, int offset_x ){
+
+  // Entrada desde abajo
+  for(int i = -8; i <= 0; i++){
+    paintArray(number[num], disp, offset_x, i);
+    delay(10);
+  }
+}
+
+void paintArray(bool array[8][8], int disp, int offset_x, int offset_y){
+
+  for(int j = 0; j < 8; j++){
+    for(int k = 0; k < 8; k++){
+      if (array[j][k]){
+        lc.setLed(disp, offset_x + j,offset_y + k,true);
+      }else{
+        lc.setLed(disp, offset_x + j,offset_y + k,false);
+      }
+    }
+  }
+
+}
+
+byte decToBcd(byte val) {
+  return ((val/10*16) + (val%10));
+}
+byte bcdToDec(byte val) {
+  return ((val/16*10) + (val%16));
 }
