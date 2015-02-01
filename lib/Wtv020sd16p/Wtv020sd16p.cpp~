@@ -91,5 +91,5 @@ void Wtv020sd16p::sendCommand(unsigned int command) {
     }
   }
   //Busy active high from last data bit latch.
-  delay(20);
+  delay(30);
 }
