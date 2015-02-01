@@ -1,0 +1,4 @@
+// Configuración para el LED
+led =     1
+reloj =     1
+paco =     1

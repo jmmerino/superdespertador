@@ -1,96 +1,328 @@
-// This is a demo of the RBBB running as webserver with the Ether Card
-// 2010-05-28 <jc@wippler.nl> http://opensource.org/licenses/mit-license.php
+/*--------------------------------------------------------------
+  Program:      eth_websrv_SD_image
 
-#include <EtherCard.h>
+  Description:  Arduino web server that serves up a basic web
+                page that displays an image.
+  
+  Hardware:     Arduino Uno and official Arduino Ethernet
+                shield. Should work with other Arduinos and
+                compatible Ethernet shields.
+                2Gb micro SD card formatted FAT16
+                
+  Software:     Developed using Arduino 1.0.5 software
+                Should be compatible with Arduino 1.0 +
+                
+                Requires index.htm, page2.htm and pic.jpg to be
+                on the micro SD card in the Ethernet shield
+                micro SD card socket.
+  
+  References:   - WebServer example by David A. Mellis and 
+                  modified by Tom Igoe
+                - SD card examples by David A. Mellis and
+                  Tom Igoe
+                - Ethernet library documentation:
+                  http://arduino.cc/en/Reference/Ethernet
+                - SD Card library documentation:
+                  http://arduino.cc/en/Reference/SD
+
+  Date:         7 March 2013
+  Modified:     17 June 2013
+ 
+  Author:       W.A. Smith, http://startingelectronics.com
+--------------------------------------------------------------*/
+
+#include <SPI.h>
+#include <Ethernet.h>
 #include <SD.h>
 
-// ethernet interface mac address, must be unique on the LAN
-static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
-static byte myip[] = { 192,168,0,17 };
+// size of buffer used to capture HTTP requests
+#define REQ_BUF_SZ   20
 
-byte Ethernet::buffer[500];
-BufferFiller bfill;
+// MAC address from Ethernet shield sticker under board
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+IPAddress ip(192, 168, 0, 20); // IP address, may need to change depending on network
+EthernetServer server(80);  // create a server at port 80
+File webFile;
+char HTTP_req[REQ_BUF_SZ] = {0}; // buffered HTTP request stored as null terminated string
+char req_index = 0;              // index into HTTP_req buffer
+
+int led_pin = 7;
 
 File myFile;
+struct parameters {
+  int led;  
+} settings;
 
-int ethernetSS = 8;
-int sdSS = 4;
-
-void setup () {
-  Serial.begin(9600);
-
-  if (ether.begin(sizeof Ethernet::buffer, mymac) == 0)
-    Serial.println( "Failed to access Ethernet controller");
-  ether.staticSetup(myip);
-
-  configureSDCard();
-}
-
-
-void configureSDCard(){
-
-  if (!SD.begin(4)) {
-    Serial.println("initialization failed!");
-    return;
-  }
-
-  Serial.println("SD OK");
-
-}
-
-void navigateHome(){
-  digitalWrite(sdSS, HIGH);
-  digitalWrite(ethernetSS, LOW);
-
-  // open the file for reading:
-  myFile = SD.open("home.htm");
-
-  digitalWrite(sdSS, LOW);
-  digitalWrite(ethernetSS, HIGH);
-
-  if (myFile) {
-    Serial.println("home.htm");
-
-    // // read from the file until there's nothing else in it:
+// Viene de aqui: https://github.com/JurgenG/ArduinoSettings
+void getSettings()
+{
+ // Open the settings file for reading:
+  myFile = SD.open("settings.txt");
+  char character;
+  String description = "";
+  String value = "";
+  boolean valid = true;
+    // read from the file until there's nothing else in it:
     while (myFile.available()) {
-      Serial.write(myFile.read());
-      // bfill.write( myFile.read() );
+      character = myFile.read();
+             if(character == '/')         {
+               // Comment - ignore this line
+               while(character != '\n'){
+                 character = myFile.read();
+               };
+      } else if(isalnum(character))      {  // Add a character to the description
+        description.concat(character);
+      } else if(character =='=')         {  // start checking the value for possible results
+      // First going to trim out all trailing white spaces
+        do {
+            character = myFile.read();
+        } while(character == ' ');
+
+        if(description == "led") {
+           Serial.println(description + "=" + character);
+           if (character=='1') {
+             settings.led = true;
+           } else {
+             settings.led = false;
+           }        
+        }else { // unknown parameter
+          while(character != '\n')
+          character = myFile.read();
+        }
+        description = "";
+      } else {
+        // Ignore this character (could be space, tab, newline, carriage return or something else)
+      }
+    
     }
-    // // close the file:
-    // myFile.close();
-  } else {
-    // if the file didn't open, print an error:
-    Serial.println("error opening home.htm");
-  }
-
-
+    // close the file:
+    myFile.close();
 }
 
-static word homePage() {
-  long t = millis() / 1000;
-  word h = t / 3600;
-  byte m = (t / 60) % 60;
-  byte s = t % 60;
-  bfill = ether.tcpOffset();
+void setSettings( String key, String newVal )
+{
+ // Open the settings file for reading:
+  myFile = SD.open("settings.txt", FILE_WRITE);
+  myFile.seek(0);
+  char character;
+  String description = "";
+  String value = "";
+  boolean valid = true;
+    // read from the file until there's nothing else in it:
+    while (myFile.available()) {
+      character = myFile.read();
+             if(character == '/')         {
+               // Comment - ignore this line
+               while(character != '\n'){
+                 character = myFile.read();
+               };
+      } else if(isalnum(character))      {  // Add a character to the description
+        description.concat(character);
+      } else if(character =='=')         {  // start checking the value for possible results
+      // First going to trim out all trailing white spaces
+        do {
+            character = myFile.read();
+        } while(character == ' ');
+        
+        if(description == key) {
+           Serial.println("Voy a escribir en " + description);
 
-  navigateHome();
-
-  // bfill.emit_p(PSTR(
-  //   "HTTP/1.0 200 OK\r\n"
-  //   "Content-Type: text/html\r\n"
-  //   "Pragma: no-cache\r\n"
-  //   "\r\n"
-  //   "<meta http-equiv='refresh' content='1'/>"
-  //   "<title>RBBB server</title>"
-  //   "<h1>$D$D:$D$D:$D$D</h1>"),
-  //     h/10, h%10, m/10, m%10, s/10, s%10);
-  return bfill.position();
+           myFile.seek(myFile.position()-1);
+           myFile.print(newVal);
+           break;
+        }else { // unknown parameter
+          while(character != '\n')
+          character = myFile.read();
+        }
+        description = "";
+      } else {
+        // Ignore this character (could be space, tab, newline, carriage return or something else)
+      }
+    
+    }
+    // close the file:
+    myFile.close();
 }
 
-void loop () {
-  word len = ether.packetReceive();
-  word pos = ether.packetLoop(len);
 
-  if (pos)  // check if valid tcp data is received
-    ether.httpServerReply(homePage()); // send web page data
+void setup()
+{
+    // disable Ethernet chip
+    pinMode(10, OUTPUT);
+    digitalWrite(10, HIGH);
+    
+    Serial.begin(9600);       // for debugging
+    
+    // initialize SD card
+    Serial.println("Initializing SD card...");
+    if (!SD.begin(4)) {
+        Serial.println("ERROR - SD card initialization failed!");
+        return;    // init failed
+    }
+    Serial.println("SUCCESS - SD card initialized.");
+    // check for index.htm file
+    if (!SD.exists("index.htm")) {
+        Serial.println("ERROR - Can't find index.htm file!");
+        return;  // can't find index file
+    }
+    Serial.println("SUCCESS - Found index.htm file.");
+    
+    Ethernet.begin(mac, ip);  // initialize Ethernet device
+    server.begin();           // start to listen for clients
+
+
+    pinMode(led_pin, OUTPUT);
+
+
+    //PRUEBA DEL LED
+    digitalWrite(led_pin, HIGH);
+    delay(3000);
+    digitalWrite(led_pin, LOW);
+    
+    // CREAR/CARGAR EL ARCHIVO DE CONFIGURACIÓN
+    getSettings();
+
+    // DEBUG ARCHIVO DE CONFIGURACION
+    // read from the file until there's nothing else in it:
+    // myFile = SD.open("settings.txt");
+    // while (myFile.available()) {
+    //     Serial.write(myFile.read());
+    // }
+
+    // COMPROBAR SI TENEMOS QUE ENCENDER EL LED
+    if (settings.led){
+        digitalWrite(led_pin, HIGH);
+    }
+}
+
+
+
+void loop()
+{
+    EthernetClient client = server.available();  // try to get client
+
+    if (client) {  // got client?
+        boolean currentLineIsBlank = true;
+        while (client.connected()) {
+            if (client.available()) {   // client data available to read
+                char c = client.read(); // read 1 byte (character) from client
+                // buffer first part of HTTP request in HTTP_req array (string)
+                // leave last element in array as 0 to null terminate string (REQ_BUF_SZ - 1)
+                if (req_index < (REQ_BUF_SZ - 1)) {
+                    HTTP_req[req_index] = c;          // save HTTP request character
+                    req_index++;
+                }
+                // print HTTP request character to serial monitor
+                Serial.print(c);
+                // last line of client request is blank and ends with \n
+                // respond to client only after last line received
+                if (c == '\n' && currentLineIsBlank) {
+                    // open requested web page file
+
+
+                    if (StrContains(HTTP_req, "GET / ")
+                                 || StrContains(HTTP_req, "GET /index.htm")) {
+                        client.println("HTTP/1.1 200 OK");
+                        client.println("Content-Type: text/html");
+                        client.println("Connnection: close");
+                        client.println();
+                        webFile = SD.open("index.htm");        // open web page file
+                        Serial.println("Opening index.htm");
+                    }                    
+                    else if (StrContains(HTTP_req, "GET /app.js")) {
+                        webFile = SD.open("app.js");
+                        if (webFile) {
+                            client.println("HTTP/1.1 200 OK");
+                            client.println();
+                        }
+                        Serial.println("Opening app.js");
+                    } 
+                    else if (StrContains(HTTP_req, "GET /led-on")) {
+                        digitalWrite(led_pin, HIGH);
+
+                        client.println("HTTP/1.1 200 OK");
+                        client.println();
+
+                        Serial.println("LED ON");                        
+                        // GUARDAMOS EL VALOR 1 PARA EL LED
+                        setSettings( "led", "1" );
+
+                    } 
+                    else if (StrContains(HTTP_req, "GET /led-off")) {
+                        digitalWrite(led_pin, LOW);
+
+                        client.println("HTTP/1.1 200 OK");
+                        client.println();
+
+                        Serial.println("LED OFF");
+
+                        // GUARDAMOS EL VALOR 0 PARA EL LED
+                        setSettings( "led", "0" );
+                        
+                    } 
+
+                    if (webFile) {
+                        while(webFile.available()) {
+                            client.write(webFile.read()); // send web page to client
+                        }
+                        webFile.close();
+                    }
+                    // reset buffer index and all buffer elements to 0
+                    req_index = 0;
+                    StrClear(HTTP_req, REQ_BUF_SZ);
+                    break;
+                }
+                // every line of text received from the client ends with \r\n
+                if (c == '\n') {
+                    // last character on line of received text
+                    // starting new line with next character read
+                    currentLineIsBlank = true;
+                } 
+                else if (c != '\r') {
+                    // a text character was received from client
+                    currentLineIsBlank = false;
+                }
+            } // end if (client.available())
+        } // end while (client.connected())
+        delay(1);      // give the web browser time to receive the data
+        client.stop(); // close the connection
+    } // end if (client)
+}
+
+// sets every element of str to 0 (clears array)
+void StrClear(char *str, char length)
+{
+    for (int i = 0; i < length; i++) {
+        str[i] = 0;
+    }
+}
+
+// searches for the string sfind in the string str
+// returns 1 if string found
+// returns 0 if string not found
+char StrContains(char *str, char *sfind)
+{
+    char found = 0;
+    char index = 0;
+    char len;
+
+    len = strlen(str);
+    
+    if (strlen(sfind) > len) {
+        return 0;
+    }
+    while (index < len) {
+        if (str[index] == sfind[found]) {
+            found++;
+            if (strlen(sfind) == found) {
+                return 1;
+            }
+        }
+        else {
+            found = 0;
+        }
+        index++;
+    }
+
+    return 0;
 }
