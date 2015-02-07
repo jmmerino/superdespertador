@@ -171,31 +171,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "src/reloj-leds/reloj-leds.ino",
-			"settings":
-			{
-				"buffer_size": 9635,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/mp3/mp3.ino",
-			"settings":
-			{
-				"buffer_size": 1593,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Unix",
-				"name": "Serial Monitor - /dev/cu.usbmodem1411"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -319,10 +294,26 @@
 	"expanded_folders":
 	[
 		"/Users/jmmerino/Projects/Arduino/superdespertador",
-		"/Users/jmmerino/Projects/Arduino/superdespertador/src"
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver/sdcard"
 	],
 	"file_history":
 	[
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver/test-webserver.ino",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver/sdcard/settings.txt",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver/sdcard/index.htm",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver/sdcard/app.js",
+		"/tmp/Arduino/505879/505879.ino",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver/sdcard/index.html",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard/sdcard.ino",
+		"/Users/jmmerino/Projects/Arduino/libraries/SD/utility/Sd2Card.cpp",
+		"/Applications/Arduino.app/Contents/Resources/Java/libraries/SD/examples/CardInfo/CardInfo.ino",
+		"/tmp/Arduino/094519/094519.ino",
+		"/Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/main.cpp",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/reloj-leds/reloj-leds.ino",
+		"/Users/jmmerino/Projects/Arduino/superdespertador/src/mp3/mp3.ino",
 		"/Users/jmmerino/Projects/Arduino/superdespertador/src/arduino-matriz-led/arduino-matriz-led.ino",
 		"/Users/jmmerino/Projects/Arduino/superdespertador/src/set-time-clock/set-time-clock.ino",
 		"/Users/jmmerino/Projects/Arduino/superdespertador/src/superdespertador/superdespertador.ino",
@@ -437,20 +428,7 @@
 		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/spec/javascripts/fixtures/controller.html",
 		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/spec/javascripts/lib/extends/pushstate_spec.js",
 		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/spec/javascripts/lib/extends/controller_spec.coffee",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/Gruntfile.js",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/spec/javascripts/lib/utils/page_state.spec.js.coffee",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/public/assets/icons/active/paper-airplane.svg",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/config/environments/production.rb",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/tmp/assets/lib/utils/page_state.js",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/app/assets/images/icons/destination/brazil_sao-paulo-state_buenos-aires.svg",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/app/assets/images/icons/destination/nepal_everest-base-camp-trek_khumbu.svg",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/app/data/styleguide/pagination_stubs.yml",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/tmp/assets/lib/extends/pushstate.js",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/public/assets/javascripts/lib/extends/pushstate.js",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/app/assets/javascripts/lib/utils/deparam.coffee",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/tmp/assets/lib/utils/deparam.js",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/public/assets/icons/active/destination--pin.svg",
-		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/config/environments/development.rb"
+		"/Users/jmmerino/Projects/LonelyPlanet/rizzo/Gruntfile.js"
 	],
 	"find":
 	{
@@ -505,6 +483,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"client",
+			"bici-1",
+			"index.html",
+			"index.htm",
 			"hours",
 			"writeClock",
 			"NBR_MTX",
@@ -628,11 +610,7 @@
 			"click",
 			"<<<<",
 			"toggle",
-			"<<<",
-			"requirejs",
-			"require",
-			"interest_section_path",
-			"interest_path"
+			"<<<"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -652,97 +630,13 @@
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "src/reloj-leds/reloj-leds.ino",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9635,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								582,
-								562
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Arduino-like IDE/Arduino.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/mp3/mp3.ino",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1593,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								637,
-								637
-							]
-						],
-						"settings":
-						{
-							"open_with_edit": true,
-							"syntax": "Packages/Arduino-like IDE/Arduino.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				}
+			]
+		},
+		{
+			"sheets":
+			[
 			]
 		}
 	],
@@ -763,11 +657,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.628510770589,
 			1.0
 		],
 		"rows":
@@ -777,7 +678,99 @@
 		]
 	},
 	"menu_visible": true,
+	"output.1422807455.912244":
+	{
+		"height": 112.0
+	},
+	"output.1422807505.951388":
+	{
+		"height": 112.0
+	},
 	"output.arduino-matriz-led":
+	{
+		"height": 112.0
+	},
+	"output.build|/Applications/Arduino.app/Contents/Resources/Java/examples/01.Basics/BareMinimum|1422807642.980208":
+	{
+		"height": 112.0
+	},
+	"output.build|/Applications/Arduino.app/Contents/Resources/Java/libraries/SD/examples/CardInfo|1422809898.382275":
+	{
+		"height": 289.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422809970.99225":
+	{
+		"height": 338.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810139.518999":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810146.480689":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810174.328294":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810348.94458":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810376.209874":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810410.620304":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810553.362244":
+	{
+		"height": 220.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810803.901671":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver/sdcard|1422808770.117276":
+	{
+		"height": 0.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422808698.601345":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422808776.82824":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422810939.195724":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422816940.810594":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422816949.360628":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817619.751402":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817859.503432":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818890.330264":
+	{
+		"height": 112.0
+	},
+	"output.build|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818973.350155":
 	{
 		"height": 112.0
 	},
@@ -812,6 +805,186 @@
 	"output.testwebserver":
 	{
 		"height": 180.0
+	},
+	"output.upload|/Applications/Arduino.app/Contents/Resources/Java/examples/01.Basics/BareMinimum|1422807648.980355":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Applications/Arduino.app/Contents/Resources/Java/examples/01.Basics/BareMinimum|1422807668.354101":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Applications/Arduino.app/Contents/Resources/Java/libraries/SD/examples/CardInfo|1422809886.82725":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810415.427036":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810559.01912":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/sdcard|1422810807.58179":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422808721.785407":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422808788.59201":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422808811.689327":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422808863.302421":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422808940.455459":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422809379.507939":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422810941.899906":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422811192.135403":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422811222.184887":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422811280.027677":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422811372.455723":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422813277.679713":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422813446.423247":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422814597.772504":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422814821.702753":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422815026.568321":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422815218.865195":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422815246.050408":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422816958.09713":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422816959.993295":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422816965.041563":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422816972.434044":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817584.734138":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817623.167887":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817653.0093":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817831.025605":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817866.871365":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422817928.390069":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818066.005431":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818328.832285":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818661.181796":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818666.496169":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818910.980182":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422818977.469922":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422819015.103988":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422819038.680791":
+	{
+		"height": 112.0
+	},
+	"output.upload|/Users/jmmerino/Projects/Arduino/superdespertador/src/test-webserver|1422819127.629104":
+	{
+		"height": 112.0
+	},
+	"output.upload|/tmp/Arduino/094519|1422808744.109802":
+	{
+		"height": 112.0
+	},
+	"output.upload|/tmp/Arduino/505879|1422817846.520087":
+	{
+		"height": 112.0
 	},
 	"project": "superdespertador.sublime-project",
 	"replace":
